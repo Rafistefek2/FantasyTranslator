@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fonter</title>
+    <link rel="stylesheet" href="style.css">
+    <script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const fonts = {
+            "draconic": "fonts/Draconic-Regular.ttf",
+            "dwarwish": "fonts/Dwarwish-Regular.ttf"
+        }; //** list of fonts */
+
+        const fontSelect = document.querySelector("#fontSelect");
+
+        // Populate font options dynamically
+        Object.keys(fonts).forEach(font => {
+            const option = document.createElement("option");
+            option.value = font;
+            option.textContent = font;
+            fontSelect.appendChild(option);
+        });
+
+        // Inject @font-face rules dynamically
+        const style = document.createElement("style");
+        Object.entries(fonts).forEach(([font, path]) => {
+            style.textContent += `
+                    @font-face {
+                        font-family: '${font}';
+                        src: url('${path}');
+                    }
+                `;
+        });
+        document.head.appendChild(style);
+    });
+    </script>
+</head>
+
+<body>
+    <script defer>
+    document.addEventListener("DOMContentLoaded", () => {
+        const textInput = document.querySelector("#textInput");
+        const fontSelect = document.querySelector("#fontSelect");
+        const outputText = document.querySelector("#outputText");
+
+        // Update output text and font dynamically
+        function updateOutput() {
+            const selectedFont = fontSelect.value;
+            outputText.style.fontFamily = selectedFont ||
+                "inherit"; // Default to "inherit" if no font is selected
+            outputText.textContent = textInput.value;
+        }
+
+        fontSelect.addEventListener("change", updateOutput);
+        textInput.addEventListener("input", updateOutput);
+
+        // Initialize output with default values
+        updateOutput();
+    });
+    </script>
+
+    <div class="container">
+        <h1>Select a Font</h1>
+        <div class="select-section">
+            <label for="fontSelect">Choose a font:</label>
+            <select id="fontSelect">
+                <option value="" selected>Select a font</option>
+                <!-- Options will be populated dynamically -->
+            </select>
+        </div>
+        <div class="output-container">
+            <div class="input-section">
+                <h2>Enter text to translate:</h2>
+                <input type="text" id="textInput" placeholder="Type here...">
+            </div>
+            <div class="output-section">
+                <h2>Output:</h2>
+                <div id="outputText" class="output"></div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
